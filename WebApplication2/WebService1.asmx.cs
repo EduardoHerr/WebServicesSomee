@@ -76,7 +76,7 @@ namespace WebApplication2
 		}
 
 		[WebMethod]
-		public void registrarProducto(int idcategoria,string codigo, string nombre,
+		public void registrarProducto(int idcategoria, string codigo, string nombre,
 			string descripcion, string fechaelab, string fechaexp, int cantidad, string estado) {
 			string sql = "INSERT INTO TBLPRODUCTO(IDCATEGORIAPRODUCTO,PRODCODIGO,PRODNOMBRE,PRODDESC,PRODFRECHAELAB," +
 				"PRODFECHAEXP,PRODCANTIDAD,PRODESTADO) " +
@@ -198,7 +198,7 @@ namespace WebApplication2
 			insertar.Parameters.Add("@3", SqlDbType.VarChar, 100).Value = direccion;
 			insertar.Parameters.Add("@4", SqlDbType.VarChar, 12).Value = telefono;
 			insertar.Parameters.Add("@5", SqlDbType.VarChar, 12).Value = correo;
-			
+
 			insertar.CommandType = CommandType.Text;
 			insertar.ExecuteReader();
 			con.Close();
@@ -208,7 +208,7 @@ namespace WebApplication2
 		}
 
 		[WebMethod]
-		public void actualizarProveedor(int id, string nombre, string ruc, string direccion, string telefono,string correo)
+		public void actualizarProveedor(int id, string nombre, string ruc, string direccion, string telefono, string correo)
 		{
 			string sql = "UPDATE  TBLPROVEEODR SET PROVNOMBRE =@1, PROVRUC=@2,PROVDIRECCION=@3,PROVTELEFONO=@4,PROVCORREO=@5 " +
 				"WHERE IDPROVEEDOR='" + id + "'";
@@ -265,8 +265,103 @@ namespace WebApplication2
 
 		}
 
-		
 
+		#region Usuario
+
+		[WebMethod]
+		public void RegistrarUsuario(string nombre, string apellido, string cedula, string correo, string clave, char rol)
+		{
+			try
+			{
+				string query = "INSERT INTO TBLUSUARIO VALUES(@nombre,@apellido,@cedula,@correo,@clave,@rol,'A')";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+
+				cmd.Parameters.AddWithValue("@nombre", nombre);
+				cmd.Parameters.AddWithValue("@apellido", apellido);
+				cmd.Parameters.AddWithValue("@cedula", cedula);
+				cmd.Parameters.AddWithValue("@correo", correo);
+				cmd.Parameters.AddWithValue("@clave", clave);
+				cmd.Parameters.AddWithValue("@rol", rol);
+
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+
+			con.Close();
+		}
+
+		[WebMethod]
+		public void actualizarCliente(string nombre, string apellido, string cedula, string correo, string clave, char rol, int id)
+		{
+			try
+			{
+				string query = "UPDATE TBLUSUARIO SET USUNOMBRE=@nombre,USUAPELLIDO=@apellido,USUCEDULA=@cedula,USUUSUARIO=@correo,USUCLAVE=@clave,USUROL=@rol WHERE IDUSUARIO=@id";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@nombre", nombre);
+				cmd.Parameters.AddWithValue("@apellido", apellido);
+				cmd.Parameters.AddWithValue("@cedula", cedula);
+				cmd.Parameters.AddWithValue("@correo", correo);
+				cmd.Parameters.AddWithValue("@clave", clave);
+				cmd.Parameters.AddWithValue("@rol", rol);
+				cmd.Parameters.AddWithValue("@id", id);
+
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+
+			con.Close();
+
+		}
+
+		[WebMethod]
+		public void eliminarUsuario(int id)
+		{
+			try
+			{
+				string query = "UPDATE TBLUSUARIO SET USUESTADO='I' WHERE IDUSUARIO=@id";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@id", id);
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+			con.Close();
+		}
+
+		[WebMethod]
+		public DataSet cargarDatosUsuario(string ci)
+		{
+
+			con.Open();
+			string query = "SELECT * FROM TBLUSUARIO WHERE USUCEDULA='" + ci + "'";
+
+
+
+			SqlDataAdapter sda = new SqlDataAdapter(query, con);
+			DataSet ds = new DataSet();
+
+			sda.Fill(ds);
+
+			con.Close();
+
+			return ds;
+		}
+
+		#endregion
 
 
 
