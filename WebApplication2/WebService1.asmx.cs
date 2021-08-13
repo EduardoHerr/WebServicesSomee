@@ -76,20 +76,20 @@ namespace WebApplication2
 		}
 
 		[WebMethod]
-		public void registrarProducto(int idcategoria, string codigo, string nombre,
-			string descripcion, string fechaelab, string fechaexp, int cantidad, string estado) {
+		public void registrarProducto(string idcategoria, string codigo, string nombre,
+			string descripcion, string fechaelab, string fechaexp, string cantidad) {
 			string sql = "INSERT INTO TBLPRODUCTO(IDCATEGORIAPRODUCTO,PRODCODIGO,PRODNOMBRE,PRODDESC,PRODFRECHAELAB," +
 				"PRODFECHAEXP,PRODCANTIDAD,PRODESTADO) " +
 				"VALUES (@1,@2,@3,@4,@5,@6,'A') ";
 			con.Open();
 			SqlCommand insertar = new SqlCommand(sql, con);
-			insertar.Parameters.Add("@1", SqlDbType.Int).Value = idcategoria;
-			insertar.Parameters.Add("@2", SqlDbType.VarChar, 100).Value = codigo;
-			insertar.Parameters.Add("@3", SqlDbType.VarChar, 100).Value = nombre;
-			insertar.Parameters.Add("@4", SqlDbType.VarChar, 100).Value = descripcion;
-			insertar.Parameters.Add("@5", SqlDbType.VarChar, 12).Value = fechaelab;
-			insertar.Parameters.Add("@6", SqlDbType.VarChar, 12).Value = fechaexp;
-			insertar.Parameters.Add("@7", SqlDbType.Int).Value = cantidad;
+			insertar.Parameters.AddWithValue("@1", idcategoria);
+			insertar.Parameters.AddWithValue("@2", codigo);
+			insertar.Parameters.AddWithValue("@3", nombre);
+			insertar.Parameters.AddWithValue("@4", descripcion);
+			insertar.Parameters.AddWithValue("@5", fechaelab);
+			insertar.Parameters.AddWithValue("@6", fechaexp);
+			insertar.Parameters.AddWithValue("@7", cantidad);
 			insertar.CommandType = CommandType.Text;
 			insertar.ExecuteReader();
 			con.Close();
@@ -100,20 +100,22 @@ namespace WebApplication2
 
 
 		[WebMethod]
-public void modificarProducto(int id,int idcate, string codigo, string nombre,
-	string descripcion, string fechaelab, string fechaexp, int cantidad, string estado)
+public void modificarProducto(string idcate, string codigo, string nombre,
+	string descripcion, string fechaelab, string fechaexp, int cantidad, string estado,int id)
 		{
 			string sql = "UPDATE  TBLPRODUCTO SET IDCATEGORIAPRODUCTO=@1, PRODCODIGO = @2, PRODNOMBRE=@3,PRODDESC=@4,PRODFRECHAELAB=@5, " +
-				"PRODFECHAEXP=@6, PRODCANTIDAD=@7 WHERE IDPRODUCTO='" + id + "'";
+				"PRODFECHAEXP=@6, PRODCANTIDAD=@7 WHERE IDPRODUCTO=@id";
 			con.Open();
 			SqlCommand insertar = new SqlCommand(sql, con);
-			insertar.Parameters.Add("@1", SqlDbType.Int).Value = idcate;
-			insertar.Parameters.Add("@2", SqlDbType.VarChar, 100).Value = codigo;
-			insertar.Parameters.Add("@3", SqlDbType.VarChar, 100).Value = nombre;
-			insertar.Parameters.Add("@4", SqlDbType.VarChar, 100).Value = descripcion;
-			insertar.Parameters.Add("@5", SqlDbType.VarChar, 12).Value = fechaelab;
-			insertar.Parameters.Add("@6", SqlDbType.VarChar, 12).Value = fechaexp;
-			insertar.Parameters.Add("@7", SqlDbType.Int).Value = cantidad;
+			insertar.Parameters.AddWithValue("@1", idcate);
+			insertar.Parameters.AddWithValue("@2", codigo);
+			insertar.Parameters.AddWithValue("@3", nombre);
+			insertar.Parameters.AddWithValue("@4", descripcion);
+			insertar.Parameters.AddWithValue("@5", fechaelab);
+			insertar.Parameters.AddWithValue("@6", fechaexp);
+			insertar.Parameters.AddWithValue("@7", cantidad);
+			insertar.Parameters.AddWithValue("@id", id);
+
 			insertar.CommandType = CommandType.Text;
 			insertar.ExecuteReader();
 			con.Close();
@@ -145,9 +147,11 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 		[WebMethod]
 		public void eliminarProducto(string id)
 		{
-			string sql = "DELETE FROM TBLPRODUCTO WHERE IDPRODUCTO='" + id + "'";
+			string sql = "DELETE FROM TBLPRODUCTO WHERE IDPRODUCTO=@id";
 			con.Open();
 			SqlCommand comando1 = new SqlCommand(sql, con);
+			comando1.Parameters.AddWithValue("@id", id);
+
 			comando1.ExecuteNonQuery();
 			con.Close();
 
@@ -160,8 +164,10 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 				"VALUES (@1,@2,'A') ";
 			con.Open();
 			SqlCommand insertar = new SqlCommand(sql, con);
-			insertar.Parameters.Add("@1", SqlDbType.VarChar, 100).Value = tipo;
-			insertar.Parameters.Add("@2", SqlDbType.VarChar, 100).Value = descripcion;
+			insertar.Parameters.AddWithValue("@1", tipo);
+			insertar.Parameters.AddWithValue("@2", descripcion);
+
+
 
 			insertar.CommandType = CommandType.Text;
 			insertar.ExecuteReader();
@@ -172,13 +178,15 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 		}
 
 		[WebMethod]
-		public void actualizarCategoria(int id, string tipo, string descripcion)
+		public void actualizarCategoria(string tipo, string descripcion,int id)
 		{
-			string sql = "UPDATE  TBLCATEGORIAPRODUCTO SET CATTIPO =@1, CATDESCRIPCION=@2 WHERE IDCATEGORIAPRODUCTO='" + id + "'";
+			string sql = "UPDATE  TBLCATEGORIAPRODUCTO SET CATTIPO =@1, CATDESCRIPCION=@2 WHERE IDCATEGORIAPRODUCTO=@id";
 			con.Open();
 			SqlCommand insertar = new SqlCommand(sql, con);
-			insertar.Parameters.Add("@1", SqlDbType.VarChar, 100).Value = tipo;
-			insertar.Parameters.Add("@2", SqlDbType.VarChar, 100).Value = descripcion;
+			insertar.Parameters.AddWithValue("@1", tipo);
+			insertar.Parameters.AddWithValue("@2", descripcion);
+			insertar.Parameters.AddWithValue("@id", id);
+
 
 			insertar.CommandType = CommandType.Text;
 			insertar.ExecuteReader();
@@ -191,12 +199,13 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 
 
 		[WebMethod]
-		public void eliminarCategoria(int idcategoria)
+		public void eliminarCategoria(int id)
 		{
 			string sql = "DELETE FROM TBLCATEGORIAPRODUCTO" +
-				" WHERE IDCATEGORIAPRODUCTO='" + idcategoria + "'";
+				" WHERE IDCATEGORIAPRODUCTO=@id";
 			con.Open();
 			SqlCommand comando1 = new SqlCommand(sql, con);
+			comando1.Parameters.AddWithValue("@id", id);
 			comando1.ExecuteNonQuery();
 			con.Close();
 
@@ -232,11 +241,16 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 				"VALUES (@1,@2,@3,@4,@5,'A') ";
 			con.Open();
 			SqlCommand insertar = new SqlCommand(sql, con);
-			insertar.Parameters.Add("@1", SqlDbType.VarChar, 100).Value = nombre;
-			insertar.Parameters.Add("@2", SqlDbType.VarChar, 100).Value = ruc;
-			insertar.Parameters.Add("@3", SqlDbType.VarChar, 100).Value = direccion;
-			insertar.Parameters.Add("@4", SqlDbType.VarChar, 12).Value = telefono;
-			insertar.Parameters.Add("@5", SqlDbType.VarChar, 12).Value = correo;
+			insertar.Parameters.AddWithValue("@1", nombre);
+			insertar.Parameters.AddWithValue("@2", ruc);
+			insertar.Parameters.AddWithValue("@3", direccion);
+			insertar.Parameters.AddWithValue("@4", telefono);
+			insertar.Parameters.AddWithValue("@5", correo);
+
+
+
+
+
 
 			insertar.CommandType = CommandType.Text;
 			insertar.ExecuteReader();
@@ -247,17 +261,19 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 		}
 
 		[WebMethod]
-		public void actualizarProveedor(int id, string nombre, string ruc, string direccion, string telefono, string correo)
+		public void actualizarProveedor( string nombre, string ruc, string direccion, string telefono, string correo,int id)
 		{
 			string sql = "UPDATE  TBLPROVEEODR SET PROVNOMBRE =@1, PROVRUC=@2,PROVDIRECCION=@3,PROVTELEFONO=@4,PROVCORREO=@5 " +
-				"WHERE IDPROVEEDOR='" + id + "'";
+				"WHERE IDPROVEEDOR = @id";
 			con.Open();
 			SqlCommand insertar = new SqlCommand(sql, con);
-			insertar.Parameters.Add("@1", SqlDbType.VarChar, 100).Value = nombre;
-			insertar.Parameters.Add("@2", SqlDbType.VarChar, 100).Value = ruc;
-			insertar.Parameters.Add("@3", SqlDbType.VarChar, 100).Value = direccion;
-			insertar.Parameters.Add("@4", SqlDbType.VarChar, 100).Value = direccion;
-			insertar.Parameters.Add("@5", SqlDbType.VarChar, 100).Value = correo;
+			insertar.Parameters.AddWithValue("@1", nombre);
+			insertar.Parameters.AddWithValue("@2", ruc);
+			insertar.Parameters.AddWithValue("@3", direccion);
+			insertar.Parameters.AddWithValue("@4", telefono);
+			insertar.Parameters.AddWithValue("@5", correo);
+			insertar.Parameters.AddWithValue("@id", id);
+
 			insertar.CommandType = CommandType.Text;
 			insertar.ExecuteReader();
 			con.Close();
@@ -290,9 +306,11 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 		public void eliminarProveedor(int id)
 		{
 			string sql = "DELETE FROM TBLPROVEEDOR" +
-				" WHERE IDPROVEEDOR='" + id + "'";
+				" WHERE IDPROVEEDOR=@id";
 			con.Open();
 			SqlCommand comando1 = new SqlCommand(sql, con);
+			comando1.Parameters.AddWithValue("@id", id);
+
 			comando1.ExecuteNonQuery();
 			con.Close();
 
@@ -304,9 +322,11 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 		public void eliminarventa(int id)
 		{
 			string sql = "DELETE FROM TBLVENTA" +
-				" WHERE IDVENTA='" + id + "'";
+				" WHERE IDVENTA= @id";
 			con.Open();
 			SqlCommand comando1 = new SqlCommand(sql, con);
+			comando1.Parameters.AddWithValue("@id", id);
+
 			comando1.ExecuteNonQuery();
 			con.Close();
 
@@ -317,9 +337,11 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 		public void eliminarcompra(int id)
 		{
 			string sql = "DELETE FROM TBLCOMPRA" +
-				" WHERE IDCOMPRA='" + id + "'";
+				" WHERE IDCOMPRA=@id";
 			con.Open();
 			SqlCommand comando1 = new SqlCommand(sql, con);
+			comando1.Parameters.AddWithValue("@id", id);
+
 			comando1.ExecuteNonQuery();
 			con.Close();
 
