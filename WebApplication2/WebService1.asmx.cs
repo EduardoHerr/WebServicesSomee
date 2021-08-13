@@ -423,7 +423,96 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 
 		#endregion
 
+		#region Cliente
+		public void RegistrarCliente(string nombre, string apellido, string cedula, string direccion, string telefono)
+		{
+			try
+			{
+				string query = "INSERT INTO TBLCLIENTE VALUES(@nombre,@apellido,@cedula,@direccion,@telf,'A')";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
 
+				cmd.Parameters.AddWithValue("@nombre", nombre);
+				cmd.Parameters.AddWithValue("@apellido", apellido);
+				cmd.Parameters.AddWithValue("@cedula", cedula);
+				cmd.Parameters.AddWithValue("@direccion", direccion);
+				cmd.Parameters.AddWithValue("@telf", telefono);
+
+
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+
+			con.Close();
+		}
+
+		public void modificarCliente(string nombre, string apellido, string cedula, string direccion, string telefono, int id)
+		{
+			try
+			{
+				string query = "UPDATE TBLCLIENTE SET CLINOMBRE=@nombre,CLIAPELLIDO=@apellido,CLICEDULA=@cedula,CLIDIRECCION=@dir,CLITELEFONO=@telf WHERE IDCLIENTE=@id";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@nombre", nombre);
+				cmd.Parameters.AddWithValue("@apellido", apellido);
+				cmd.Parameters.AddWithValue("@cedula", cedula);
+				cmd.Parameters.AddWithValue("@dir", direccion);
+				cmd.Parameters.AddWithValue("@telf", telefono);
+				cmd.Parameters.AddWithValue("@id", id);
+
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+
+			con.Close();
+
+		}
+
+		public void eliminarCliente(int id)
+		{
+			try
+			{
+				string query = "UPDATE TBLCLIENTE SET CLIESTADO='I' WHERE IDCLIENTE=@id";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@id", id);
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+			con.Close();
+		}
+
+
+		public DataSet cargarDatosCliente(string ci)
+		{
+
+			con.Open();
+			string query = "SELECT * FROM TBLCLIENTE WHERE CLICEDULA='" + ci + "'";
+
+
+
+			SqlDataAdapter sda = new SqlDataAdapter(query, con);
+			DataSet ds = new DataSet();
+
+			sda.Fill(ds);
+
+			con.Close();
+
+			return ds;
+		}
+		#endregion
 
 	}
 
