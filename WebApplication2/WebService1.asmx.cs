@@ -100,19 +100,20 @@ namespace WebApplication2
 
 
 		[WebMethod]
-		public void modificarProducto(int id, string codigo, string nombre,
+public void modificarProducto(int id,int idcate, string codigo, string nombre,
 	string descripcion, string fechaelab, string fechaexp, int cantidad, string estado)
 		{
-			string sql = "UPDATE  TBLPRODUCTO SET PRODCODIGO = @1, PRODNOMBRE=@2,PRODDESC=@3,PRODFRECHAELAB=@4, " +
-				"PRODFECHAEXP=@5, PRODCANTIDAD=@6 WHERE IDPRODUCTO='" + id + "'";
+			string sql = "UPDATE  TBLPRODUCTO SET IDCATEGORIAPRODUCTO=@1, PRODCODIGO = @2, PRODNOMBRE=@3,PRODDESC=@4,PRODFRECHAELAB=@5, " +
+				"PRODFECHAEXP=@6, PRODCANTIDAD=@7 WHERE IDPRODUCTO='" + id + "'";
 			con.Open();
 			SqlCommand insertar = new SqlCommand(sql, con);
-			insertar.Parameters.Add("@1", SqlDbType.VarChar, 100).Value = codigo;
-			insertar.Parameters.Add("@2", SqlDbType.VarChar, 100).Value = nombre;
-			insertar.Parameters.Add("@3", SqlDbType.VarChar, 100).Value = descripcion;
-			insertar.Parameters.Add("@4", SqlDbType.VarChar, 12).Value = fechaelab;
-			insertar.Parameters.Add("@5", SqlDbType.VarChar, 12).Value = fechaexp;
-			insertar.Parameters.Add("@6", SqlDbType.Int).Value = cantidad;
+			insertar.Parameters.Add("@1", SqlDbType.Int).Value = idcate;
+			insertar.Parameters.Add("@2", SqlDbType.VarChar, 100).Value = codigo;
+			insertar.Parameters.Add("@3", SqlDbType.VarChar, 100).Value = nombre;
+			insertar.Parameters.Add("@4", SqlDbType.VarChar, 100).Value = descripcion;
+			insertar.Parameters.Add("@5", SqlDbType.VarChar, 12).Value = fechaelab;
+			insertar.Parameters.Add("@6", SqlDbType.VarChar, 12).Value = fechaexp;
+			insertar.Parameters.Add("@7", SqlDbType.Int).Value = cantidad;
 			insertar.CommandType = CommandType.Text;
 			insertar.ExecuteReader();
 			con.Close();
@@ -121,7 +122,24 @@ namespace WebApplication2
 
 		}
 
+		[WebMethod]
+		public DataSet cargarDatosProducto(string id)
+		{
 
+			con.Open();
+			string query = "SELECT * FROM viewProCat WHERE IDPRODUCTO='" + id + "'";
+
+
+
+			SqlDataAdapter sda = new SqlDataAdapter(query, con);
+			DataSet ds = new DataSet();
+
+			sda.Fill(ds);
+
+			con.Close();
+
+			return ds;
+		}
 
 
 		[WebMethod]
@@ -185,6 +203,27 @@ namespace WebApplication2
 		}
 
 		[WebMethod]
+		public DataSet cargarDatosCategoria(string id)
+		{
+
+			con.Open();
+			string query = "SELECT * FROM TBLCATEGORIAPRODUCTO WHERE IDCATEGORIAPRODUCTO='" + id + "'";
+
+
+
+			SqlDataAdapter sda = new SqlDataAdapter(query, con);
+			DataSet ds = new DataSet();
+
+			sda.Fill(ds);
+
+			con.Close();
+
+			return ds;
+		}
+
+
+
+		[WebMethod]
 		public void registrarProveedor(string nombre, string ruc, string direccion, string telefono, string correo)
 		{
 			string sql = "INSERT INTO TBLPROVEEDOR" +
@@ -224,6 +263,27 @@ namespace WebApplication2
 			con.Close();
 
 		}
+
+		[WebMethod]
+		public DataSet cargarDatosProveedor(string ruc)
+		{
+
+			con.Open();
+			string query = "SELECT * FROM TBLPROVEEODR WHERE PROVRUC='" + ruc + "'";
+
+
+
+			SqlDataAdapter sda = new SqlDataAdapter(query, con);
+			DataSet ds = new DataSet();
+
+			sda.Fill(ds);
+
+			con.Close();
+
+			return ds;
+		}
+
+
 
 
 		[WebMethod]
