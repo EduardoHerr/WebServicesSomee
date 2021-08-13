@@ -424,6 +424,7 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 		#endregion
 
 		#region Cliente
+		[WebMethod]
 		public void RegistrarCliente(string nombre, string apellido, string cedula, string direccion, string telefono)
 		{
 			try
@@ -450,6 +451,7 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 			con.Close();
 		}
 
+		[WebMethod]
 		public void modificarCliente(string nombre, string apellido, string cedula, string direccion, string telefono, int id)
 		{
 			try
@@ -476,6 +478,7 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 
 		}
 
+		[WebMethod]
 		public void eliminarCliente(int id)
 		{
 			try
@@ -495,6 +498,7 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 		}
 
 
+		[WebMethod]
 		public DataSet cargarDatosCliente(string ci)
 		{
 
