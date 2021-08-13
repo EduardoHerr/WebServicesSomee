@@ -123,11 +123,11 @@ public void modificarProducto(int id,int idcate, string codigo, string nombre,
 		}
 
 		[WebMethod]
-		public DataSet cargarDatosProducto(string id)
+		public DataSet cargarDatosProducto(string codigo)
 		{
 
 			con.Open();
-			string query = "SELECT * FROM viewProCat WHERE IDPRODUCTO='" + id + "'";
+			string query = "SELECT * FROM viewProCat WHERE PRODCODIGO='" + codigo + "'";
 
 
 
