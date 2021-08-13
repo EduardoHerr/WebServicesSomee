@@ -102,7 +102,7 @@ namespace WebApplication2
 
 		[WebMethod]
 public void modificarProducto(string idcate, string codigo, string nombre,
-	string descripcion, string fechaelab, string fechaexp, int cantidad, string estado,int id)
+	string descripcion, string fechaelab, string fechaexp, string cantidad,int id)
 		{
 			string sql = "UPDATE  TBLPRODUCTO SET IDCATEGORIAPRODUCTO=@1, PRODCODIGO = @2, PRODNOMBRE=@3,PRODDESC=@4,PRODFRECHAELAB=@5, " +
 				"PRODFECHAEXP=@6, PRODCANTIDAD=@7 WHERE IDPRODUCTO=@id";
@@ -126,11 +126,11 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 		}
 
 		[WebMethod]
-		public DataSet cargarDatosProducto(string codigo)
+		public DataSet cargarDatosProducto(string id)
 		{
 
 			con.Open();
-			string query = "SELECT * FROM viewProCat WHERE PRODCODIGO='" + codigo + "'";
+			string query = "SELECT * FROM viewProCat WHERE IDPRODUCTO='" + id + "'";
 
 
 
