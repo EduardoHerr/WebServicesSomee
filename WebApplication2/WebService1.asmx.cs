@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Services;
 
 
+
 namespace WebApplication2
 {
 	/// <summary>
@@ -145,7 +146,7 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 
 
 		[WebMethod]
-		public void eliminarProducto(string id)
+		public void eliminarProducto(int id)
 		{
 			string sql = "DELETE FROM TBLPRODUCTO WHERE IDPRODUCTO=@id";
 			con.Open();
@@ -206,6 +207,7 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 			con.Open();
 			SqlCommand comando1 = new SqlCommand(sql, con);
 			comando1.Parameters.AddWithValue("@id", id);
+
 			comando1.ExecuteNonQuery();
 			con.Close();
 
