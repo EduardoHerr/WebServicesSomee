@@ -75,19 +75,20 @@ namespace WebApplication2
 		}
 
 		[WebMethod]
-		public void registrarProducto(string codigo, string nombre,
+		public void registrarProducto(int idcategoria,string codigo, string nombre,
 			string descripcion, string fechaelab, string fechaexp, int cantidad, string estado) {
-			string sql = "INSERT INTO TBLPRODUCTO(PRODCODIGO,PRODNOMBRE,PRODDESC,PRODFRECHAELAB," +
+			string sql = "INSERT INTO TBLPRODUCTO(IDCATEGORIAPRODUCTO,PRODCODIGO,PRODNOMBRE,PRODDESC,PRODFRECHAELAB," +
 				"PRODFECHAEXP,PRODCANTIDAD,PRODESTADO) " +
 				"VALUES (@1,@2,@3,@4,@5,@6,'A') ";
 			con.Open();
 			SqlCommand insertar = new SqlCommand(sql, con);
-			insertar.Parameters.Add("@1", SqlDbType.VarChar, 100).Value = codigo;
-			insertar.Parameters.Add("@2", SqlDbType.VarChar, 100).Value = nombre;
-			insertar.Parameters.Add("@3", SqlDbType.VarChar, 100).Value = descripcion;
-			insertar.Parameters.Add("@4", SqlDbType.VarChar, 12).Value = fechaelab;
-			insertar.Parameters.Add("@5", SqlDbType.VarChar, 12).Value = fechaexp;
-			insertar.Parameters.Add("@6", SqlDbType.Int).Value = cantidad;
+			insertar.Parameters.Add("@1", SqlDbType.Int).Value = idcategoria;
+			insertar.Parameters.Add("@2", SqlDbType.VarChar, 100).Value = codigo;
+			insertar.Parameters.Add("@3", SqlDbType.VarChar, 100).Value = nombre;
+			insertar.Parameters.Add("@4", SqlDbType.VarChar, 100).Value = descripcion;
+			insertar.Parameters.Add("@5", SqlDbType.VarChar, 12).Value = fechaelab;
+			insertar.Parameters.Add("@6", SqlDbType.VarChar, 12).Value = fechaexp;
+			insertar.Parameters.Add("@7", SqlDbType.Int).Value = cantidad;
 			insertar.CommandType = CommandType.Text;
 			insertar.ExecuteReader();
 			con.Close();
@@ -217,12 +218,9 @@ namespace WebApplication2
 			insertar.Parameters.Add("@3", SqlDbType.VarChar, 100).Value = direccion;
 			insertar.Parameters.Add("@4", SqlDbType.VarChar, 100).Value = direccion;
 			insertar.Parameters.Add("@5", SqlDbType.VarChar, 100).Value = correo;
-
 			insertar.CommandType = CommandType.Text;
 			insertar.ExecuteReader();
 			con.Close();
-
-
 
 		}
 
@@ -238,6 +236,8 @@ namespace WebApplication2
 			con.Close();
 
 		}
+
+
 
 		[WebMethod]
 		public void eliminarventa(int id)
