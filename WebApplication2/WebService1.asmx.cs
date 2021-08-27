@@ -336,7 +336,37 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 
 
 		[WebMethod]
-		public void eliminarcompra(int id)
+		public void registrarCompra(string idproveedor, string idproducto, string comcodigo, int comcantidad, float comcostocompra, string comfecha)
+		{
+			string sql = "INSERT INTO TBLCOMPRA" +
+				"(IDPROVEEDOR,IDPRODUCTO,COMCODIGO,COMCANTIDAD,COMCOSTOCOMPRA," +
+				"COMFECHA,COMESTADO) " +
+				"VALUES (@1,@2,@3,@4,@5,@6,'A') ";
+			con.Open();
+			SqlCommand insertar = new SqlCommand(sql, con);
+			insertar.Parameters.AddWithValue("@1", idproveedor);
+			insertar.Parameters.AddWithValue("@2", idproducto);
+			insertar.Parameters.AddWithValue("@3", comcodigo);
+			insertar.Parameters.AddWithValue("@4", comcantidad);
+			insertar.Parameters.AddWithValue("@5", comcostocompra);
+            insertar.Parameters.AddWithValue("@6", comfecha);
+
+
+
+
+
+
+
+			insertar.CommandType = CommandType.Text;
+			insertar.ExecuteReader();
+			con.Close();
+
+
+
+		}
+
+		[WebMethod]
+		public void eliminarCompra(int id)
 		{
 			string sql = "DELETE FROM TBLCOMPRA" +
 				" WHERE IDCOMPRA=@id";
