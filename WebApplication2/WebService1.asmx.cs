@@ -366,6 +366,25 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 		}
 
 		[WebMethod]
+		public DataSet verCompra(string codigo)
+		{
+
+			con.Open();
+			string query = "SELECT * FROM VIEWVERCOMPRA WHERE COMCODIGO='" + codigo + "'";
+
+
+
+			SqlDataAdapter sda = new SqlDataAdapter(query, con);
+			DataSet ds = new DataSet();
+
+			sda.Fill(ds);
+
+			con.Close();
+
+			return ds;
+		}
+
+		[WebMethod]
 		public void eliminarCompra(int id)
 		{
 			string sql = "DELETE FROM TBLCOMPRA" +
