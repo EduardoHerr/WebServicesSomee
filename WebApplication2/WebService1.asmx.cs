@@ -287,7 +287,7 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 		{
 
 			con.Open();
-			string query = "SELECT * FROM TBLPROVEEODR WHERE PROVRUC='" + ruc + "'";
+			string query = "SELECT * FROM TBLPROVEEDOR WHERE PROVRUC='" + ruc + "'";
 
 
 
