@@ -132,7 +132,7 @@ public void modificarProducto( string codigo, string nombre,
 		{
 
 			con.Open();
-			string query = "SELECT * FROM viewProCat WHERE IDPRODUCTO='" + id + "' AND PROESTADO='A'";
+			string query = "SELECT * FROM viewProCat WHERE IDPRODUCTO='" + id + "' AND PRODESTADO='A'";
 
 
 
@@ -346,7 +346,7 @@ public void modificarProducto( string codigo, string nombre,
 
 
 		[WebMethod]
-		public void registrarVenta(string idproducto, string idcliente, string vntcodigo, int vntcantidad, float vntcostoventa, string vntfecha)
+		public void registrarVenta(string idproducto, string idcliente, string vntcodigo, int vntcantidad, double vntcostoventa, string vntfecha)
 		{
 			try
 			{
@@ -403,7 +403,7 @@ public void modificarProducto( string codigo, string nombre,
 		{
 
 			con.Open();
-			string query = "SELECT * FROM VIEWVENTA WHERE IDVENTA='" + id + "'";
+			string query = "SELECT * FROM VIEWVERVENTA WHERE IDVENTA='" + id + "'";
 
 
 
@@ -425,9 +425,10 @@ public void modificarProducto( string codigo, string nombre,
 		public void AumentarProducto(int cant , int id) {
 			try
 			{
-				string query = "UPDATE TBLPRODUCTO SET PRODCANTIDAD= PRODCANTIDAD + '" + cant + "' WHERE IDPRODUCTO=@id";
+				string query = "UPDATE TBLPRODUCTO SET PRODCANTIDAD= PRODCANTIDAD + @cant  WHERE IDPRODUCTO=@id";
 				con.Open();
 				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@cant", cant);
 				cmd.Parameters.AddWithValue("@id", id);
 				cmd.ExecuteNonQuery();
 
@@ -445,9 +446,11 @@ public void modificarProducto( string codigo, string nombre,
 		{
 			try
 			{
-				string query = "UPDATE TBLPRODUCTO SET PRODCANTIDAD= PRODCANTIDAD - '" + cant + "' WHERE IDPRODUCTO=@id";
+				string query =
+					"UPDATE TBLPRODUCTO SET PRODCANTIDAD= PRODCANTIDAD - @cant  WHERE IDPRODUCTO=@id";
 				con.Open();
 				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@cant",cant);
 				cmd.Parameters.AddWithValue("@id", id);
 				cmd.ExecuteNonQuery();
 
@@ -466,7 +469,7 @@ public void modificarProducto( string codigo, string nombre,
 
 
 		[WebMethod]
-		public void registrarCompra(string idproveedor, string idproducto, string comcodigo, int comcantidad, float comcostocompra, string comfecha)
+		public void registrarCompra(string idproveedor, string idproducto, string comcodigo, int comcantidad, Double comcostocompra, string comfecha)
 		{
 			try
 			{
