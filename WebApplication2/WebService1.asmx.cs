@@ -76,21 +76,23 @@ namespace WebApplication2
 			return rol;
 		}
 
-		[WebMethod]
-		public void registrarProducto(string idcategoria, string codigo, string nombre,
+        #region Producto
+
+        [WebMethod]
+		public void registrarProducto( string codigo, string nombre,
 			string descripcion, string fechaelab, string fechaexp, string cantidad) {
-			string sql = "INSERT INTO TBLPRODUCTO(IDCATEGORIAPRODUCTO,PRODCODIGO,PRODNOMBRE,PRODDESC,PRODFRECHAELAB," +
+			string sql = "INSERT INTO TBLPRODUCTO(PRODCODIGO,PRODNOMBRE,PRODDESC,PRODFRECHAELAB," +
 				"PRODFECHAEXP,PRODCANTIDAD,PRODESTADO) " +
-				"VALUES (@1,@2,@3,@4,@5,@6,'A') ";
+				"VALUES (@1,@2,@3,@4,@5,'A') ";
 			con.Open();
 			SqlCommand insertar = new SqlCommand(sql, con);
-			insertar.Parameters.AddWithValue("@1", idcategoria);
-			insertar.Parameters.AddWithValue("@2", codigo);
-			insertar.Parameters.AddWithValue("@3", nombre);
-			insertar.Parameters.AddWithValue("@4", descripcion);
-			insertar.Parameters.AddWithValue("@5", fechaelab);
-			insertar.Parameters.AddWithValue("@6", fechaexp);
-			insertar.Parameters.AddWithValue("@7", cantidad);
+			
+			insertar.Parameters.AddWithValue("@1", codigo);
+			insertar.Parameters.AddWithValue("@2", nombre);
+			insertar.Parameters.AddWithValue("@3", descripcion);
+			insertar.Parameters.AddWithValue("@4", fechaelab);
+			insertar.Parameters.AddWithValue("@5", fechaexp);
+			insertar.Parameters.AddWithValue("@6", cantidad);
 			insertar.CommandType = CommandType.Text;
 			insertar.ExecuteReader();
 			con.Close();
@@ -101,14 +103,14 @@ namespace WebApplication2
 
 
 		[WebMethod]
-public void modificarProducto(string idcate, string codigo, string nombre,
+public void modificarProducto( string codigo, string nombre,
 	string descripcion, string fechaelab, string fechaexp, string cantidad,int id)
 		{
-			string sql = "UPDATE  TBLPRODUCTO SET IDCATEGORIAPRODUCTO=@1, PRODCODIGO = @2, PRODNOMBRE=@3,PRODDESC=@4,PRODFRECHAELAB=@5, " +
+			string sql = "UPDATE  TBLPRODUCTO SET  PRODCODIGO = @2, PRODNOMBRE=@3,PRODDESC=@4,PRODFRECHAELAB=@5, " +
 				"PRODFECHAEXP=@6, PRODCANTIDAD=@7 WHERE IDPRODUCTO=@id";
 			con.Open();
 			SqlCommand insertar = new SqlCommand(sql, con);
-			insertar.Parameters.AddWithValue("@1", idcate);
+			
 			insertar.Parameters.AddWithValue("@2", codigo);
 			insertar.Parameters.AddWithValue("@3", nombre);
 			insertar.Parameters.AddWithValue("@4", descripcion);
@@ -130,7 +132,7 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 		{
 
 			con.Open();
-			string query = "SELECT * FROM viewProCat WHERE IDPRODUCTO='" + id + "'";
+			string query = "SELECT * FROM viewProCat WHERE IDPRODUCTO='" + id + "' AND PROESTADO='A'";
 
 
 
@@ -148,17 +150,26 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 		[WebMethod]
 		public void eliminarProducto(int id)
 		{
-			string sql = "DELETE FROM TBLPRODUCTO WHERE IDPRODUCTO=@id";
-			con.Open();
-			SqlCommand comando1 = new SqlCommand(sql, con);
-			comando1.Parameters.AddWithValue("@id", id);
+			try
+			{
+				string query = "UPDATE TBLPRODUCTO SET PRODESTADO='I' WHERE IDPRODUCTO=@id";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@id", id);
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
 
-			comando1.ExecuteNonQuery();
-			con.Close();
+				throw;
+			}
 
 		}
+        #endregion
 
-		[WebMethod]
+        #region Categoria
+        [WebMethod]
+		
 		public void registrarCategoria(string tipo, string descripcion)
 		{
 			string sql = "INSERT INTO TBLCATEGORIAPRODUCTO(CATTIPO,CATDESCRIPCION, CATESTADO) " +
@@ -202,15 +213,19 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 		[WebMethod]
 		public void eliminarCategoria(int id)
 		{
-			string sql = "DELETE FROM TBLCATEGORIAPRODUCTO" +
-				" WHERE IDCATEGORIAPRODUCTO=@id";
-			con.Open();
-			SqlCommand comando1 = new SqlCommand(sql, con);
-			comando1.Parameters.AddWithValue("@id", id);
+			try
+			{
+				string query = "UPDATE TBLCATEGORIAPRODUCTO SET CATESTADO='I' WHERE IDCATEGORIAPRODUCTO=@id";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@id", id);
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
 
-			comando1.ExecuteNonQuery();
-			con.Close();
-
+				throw;
+			}
 		}
 
 		[WebMethod]
@@ -232,9 +247,10 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 			return ds;
 		}
 
+        #endregion
 
-
-		[WebMethod]
+        #region Proveedor
+        [WebMethod]
 		public void registrarProveedor(string nombre, string ruc, string direccion, string telefono, string correo)
 		{
 			string sql = "INSERT INTO TBLPROVEEDOR" +
@@ -265,7 +281,7 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 		[WebMethod]
 		public void actualizarProveedor( string nombre, string ruc, string direccion, string telefono, string correo,int id)
 		{
-			string sql = "UPDATE  TBLPROVEEODR SET PROVNOMBRE =@1, PROVRUC=@2,PROVDIRECCION=@3,PROVTELEFONO=@4,PROVCORREO=@5 " +
+			string sql = "UPDATE  TBLPROVEEDOR SET PROVNOMBRE =@1, PROVRUC=@2,PROVDIRECCION=@3,PROVTELEFONO=@4,PROVCORREO=@5 " +
 				"WHERE IDPROVEEDOR = @id";
 			con.Open();
 			SqlCommand insertar = new SqlCommand(sql, con);
@@ -307,58 +323,173 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 		[WebMethod]
 		public void eliminarProveedor(int id)
 		{
-			string sql = "DELETE FROM TBLPROVEEDOR" +
-				" WHERE IDPROVEEDOR=@id";
-			con.Open();
-			SqlCommand comando1 = new SqlCommand(sql, con);
-			comando1.Parameters.AddWithValue("@id", id);
+			try
+			{
+				string query = "UPDATE TBLPROVEEDOR SET PROVESTADO='I' WHERE IDPROVEEDOR=@id";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@id", id);
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
 
-			comando1.ExecuteNonQuery();
+				throw;
+			}
+			con.Close();
+		}
+
+
+        #endregion
+
+        #region venta
+
+
+		[WebMethod]
+		public void registrarVenta(string idproducto, string idcliente, string vntcodigo, int vntcantidad, float vntcostoventa, string vntfecha)
+		{
+			try
+			{
+				string sql = "INSERT INTO TBLVENTA" +
+					"(IDPRODUCTO,IDCLIENTE,VNTCODIGO,VNTCANTIDAD,VNTCOSTOVENTA," +
+					"VNTFECHA,VNTESTADO) " +
+					"VALUES (@1,@2,@3,@4,@5,@6,'A') ";
+				con.Open();
+				SqlCommand insertar = new SqlCommand(sql, con);
+				insertar.Parameters.AddWithValue("@1", idproducto);
+				insertar.Parameters.AddWithValue("@2", idcliente);
+				insertar.Parameters.AddWithValue("@3", vntcodigo);
+				insertar.Parameters.AddWithValue("@4", vntcantidad);
+				insertar.Parameters.AddWithValue("@5", vntcostoventa);
+				insertar.Parameters.AddWithValue("@6", vntfecha);
+				insertar.CommandType = CommandType.Text;
+				insertar.ExecuteReader();
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+
 			con.Close();
 
+
+
 		}
+
 
 
 
 		[WebMethod]
 		public void eliminarventa(int id)
 		{
-			string sql = "DELETE FROM TBLVENTA" +
-				" WHERE IDVENTA= @id";
-			con.Open();
-			SqlCommand comando1 = new SqlCommand(sql, con);
-			comando1.Parameters.AddWithValue("@id", id);
+			try
+			{
+				string query = "UPDATE TBLVENTA SET VNTESTADO='I' WHERE IDVENTA=@id";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@id", id);
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
 
-			comando1.ExecuteNonQuery();
-			con.Close();
+				throw;
+			}
 
 		}
+
+		[WebMethod]
+		public DataSet verVenta(int id)
+		{
+
+			con.Open();
+			string query = "SELECT * FROM VIEWVENTA WHERE IDVENTA='" + id + "'";
+
+
+
+			SqlDataAdapter sda = new SqlDataAdapter(query, con);
+			DataSet ds = new DataSet();
+
+			sda.Fill(ds);
+
+			con.Close();
+
+			return ds;
+		}
+
+
+		#endregion
+
+		#region CompraVenta
+		[WebMethod]
+		public void AumentarProducto(int cant , int id) {
+			try
+			{
+				string query = "UPDATE TBLPRODUCTO SET PRODCANTIDAD= PRODCANTIDAD + '" + cant + "' WHERE IDPRODUCTO=@id";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@id", id);
+				cmd.ExecuteNonQuery();
+
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+
+
+		}
+
+		[WebMethod]
+		public void RestarProducto(int cant, int id)
+		{
+			try
+			{
+				string query = "UPDATE TBLPRODUCTO SET PRODCANTIDAD= PRODCANTIDAD - '" + cant + "' WHERE IDPRODUCTO=@id";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@id", id);
+				cmd.ExecuteNonQuery();
+
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+
+
+		}
+		#endregion
+
+
+		#region compra
 
 
 		[WebMethod]
 		public void registrarCompra(string idproveedor, string idproducto, string comcodigo, int comcantidad, float comcostocompra, string comfecha)
 		{
-			string sql = "INSERT INTO TBLCOMPRA" +
-				"(IDPROVEEDOR,IDPRODUCTO,COMCODIGO,COMCANTIDAD,COMCOSTOCOMPRA," +
-				"COMFECHA,COMESTADO) " +
-				"VALUES (@1,@2,@3,@4,@5,@6,'A') ";
-			con.Open();
-			SqlCommand insertar = new SqlCommand(sql, con);
-			insertar.Parameters.AddWithValue("@1", idproveedor);
-			insertar.Parameters.AddWithValue("@2", idproducto);
-			insertar.Parameters.AddWithValue("@3", comcodigo);
-			insertar.Parameters.AddWithValue("@4", comcantidad);
-			insertar.Parameters.AddWithValue("@5", comcostocompra);
-            insertar.Parameters.AddWithValue("@6", comfecha);
+			try
+			{
+				string sql = "INSERT INTO TBLCOMPRA" +
+					"(IDPROVEEDOR,IDPRODUCTO,COMCODIGO,COMCANTIDAD,COMCOSTOCOMPRA," +
+					"COMFECHA,COMESTADO) " +
+					"VALUES (@1,@2,@3,@4,@5,@6,'A') ";
+				con.Open();
+				SqlCommand insertar = new SqlCommand(sql, con);
+				insertar.Parameters.AddWithValue("@1", idproveedor);
+				insertar.Parameters.AddWithValue("@2", idproducto);
+				insertar.Parameters.AddWithValue("@3", comcodigo);
+				insertar.Parameters.AddWithValue("@4", comcantidad);
+				insertar.Parameters.AddWithValue("@5", comcostocompra);
+				insertar.Parameters.AddWithValue("@6", comfecha);
+				insertar.CommandType = CommandType.Text;
+				insertar.ExecuteReader();
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 
-
-
-
-
-
-
-			insertar.CommandType = CommandType.Text;
-			insertar.ExecuteReader();
 			con.Close();
 
 
@@ -366,11 +497,11 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 		}
 
 		[WebMethod]
-		public DataSet verCompra(string codigo)
+		public DataSet verCompra(int id)
 		{
 
 			con.Open();
-			string query = "SELECT * FROM VIEWVERCOMPRA WHERE COMCODIGO='" + codigo + "'";
+			string query = "SELECT * FROM VIEWVERCOMPRA WHERE IDCOMPRA='" + id + "'";
 
 
 
@@ -387,21 +518,29 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 		[WebMethod]
 		public void eliminarCompra(int id)
 		{
-			string sql = "DELETE FROM TBLCOMPRA" +
-				" WHERE IDCOMPRA=@id";
-			con.Open();
-			SqlCommand comando1 = new SqlCommand(sql, con);
-			comando1.Parameters.AddWithValue("@id", id);
+			
+			try
+			{
+				string query = "UPDATE TBLCOMPRA SET COMESTADO='I' WHERE IDCOMPRA=@id";
+				con.Open();
+				SqlCommand cmd = new SqlCommand(query, con);
+				cmd.Parameters.AddWithValue("@id", id);
+				cmd.ExecuteNonQuery();
+			}
+			catch (Exception)
+			{
 
-			comando1.ExecuteNonQuery();
-			con.Close();
+				throw;
+			}
 
 		}
 
+        #endregion
 
-		#region Usuario
 
-		[WebMethod]
+        #region Usuario
+
+        [WebMethod]
 		public void RegistrarUsuario(string nombre, string apellido, string cedula, string correo, string clave, char rol)
 		{
 			try
@@ -496,6 +635,7 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 
 		#endregion
 
+
 		#region Cliente
 		[WebMethod]
 		public void RegistrarCliente(string nombre, string apellido, string cedula, string direccion, string telefono)
@@ -576,7 +716,7 @@ public void modificarProducto(string idcate, string codigo, string nombre,
 		{
 
 			con.Open();
-			string query = "SELECT * FROM TBLCLIENTE WHERE CLICEDULA='" + ci + "'";
+			string query = "SELECT * FROM TBLCLIENTE WHERE CLICEDULA='" + ci + "' ";
 
 
 
